@@ -1,0 +1,10 @@
+C:\Daten\Gemeinde\Sublan\Programierung\CasparsPlayoutClient\logger\bin\Debug\logger.dll
+C:\Daten\Gemeinde\Sublan\Programierung\CasparsPlayoutClient\logger\bin\Debug\logger.pdb
+C:\Daten\Gemeinde\Sublan\Programierung\CasparsPlayoutClient\logger\bin\Debug\logger.xml
+C:\Daten\Gemeinde\Sublan\Programierung\CasparsPlayoutClient\logger\obj\Debug\Interop.MSXML2.dll
+C:\Daten\Gemeinde\Sublan\Programierung\CasparsPlayoutClient\logger\obj\Debug\logger.vbproj.ResolveComReference.cache
+C:\Daten\Gemeinde\Sublan\Programierung\CasparsPlayoutClient\logger\obj\Debug\logger.Resources.resources
+C:\Daten\Gemeinde\Sublan\Programierung\CasparsPlayoutClient\logger\obj\Debug\logger.vbproj.GenerateResource.Cache
+C:\Daten\Gemeinde\Sublan\Programierung\CasparsPlayoutClient\logger\obj\Debug\logger.dll
+C:\Daten\Gemeinde\Sublan\Programierung\CasparsPlayoutClient\logger\obj\Debug\logger.xml
+C:\Daten\Gemeinde\Sublan\Programierung\CasparsPlayoutClient\logger\obj\Debug\logger.pdb

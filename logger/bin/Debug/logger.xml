@@ -1,0 +1,38 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+logger
+</name>
+</assembly>
+<members>
+<member name="P:logger.My.Resources.Resources.ResourceManager">
+	<summary>
+  Gibt die zwischengespeicherte ResourceManager-Instanz zurück, die von dieser Klasse verwendet wird.
+</summary>
+</member><member name="P:logger.My.Resources.Resources.Culture">
+	<summary>
+  Überschreibt die CurrentUICulture-Eigenschaft des aktuellen Threads für alle
+  Ressourcenzuordnungen, die diese stark typisierte Ressourcenklasse verwenden.
+</summary>
+</member><member name="T:logger.My.Resources.Resources">
+	<summary>
+  Eine stark typisierte Ressourcenklasse zum Suchen von lokalisierten Zeichenfolgen usw.
+</summary>
+</member><member name="T:logger.logger">
+	<summary>
+ This module is a logging and debugging utility which provides functions for logging eighter to a file or a console
+ </summary>
+	<remarks></remarks>
+</member><member name="M:logger.fileLogger.#ctor(System.Byte,System.String,System.Boolean,System.Boolean)">
+	<summary>
+ Creates a new fileLogger which writes log messages at a given loglevel and lower to a logfile
+ </summary>
+	<param name="loglevel">the loglevel between 0 (critical error) and greater/equal 4 (debug)</param>
+	<param name="logfile">the filename with path to the logfile</param>
+	<param name="directWrite">enables imediate writing of every messages to file. If disabled, messages will only be written when manuelly flushed or logger closed</param>
+	<param name="appendExisting">enables appending to existing files. If disabled, old logfiles will be overwritten</param>
+	<remarks></remarks>
+</member>
+</members>
+</doc>
