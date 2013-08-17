@@ -20,7 +20,9 @@
 ''' <remarks></remarks>
 Public Module logger
 
-    Private messages As List(Of message) = New List(Of message)
+    Private purgeLock As New Threading.Semaphore(1, 1)
+    Public Property maxMessageCount As Integer = 20000
+    Private messages As List(Of message) = New List(Of message)(maxMessageCount + 1)
     Private logActions As List(Of ILogAction) = New List(Of ILogAction)
     Public stdLogAction As New consoleLogger(loglevels.log)
 
@@ -92,7 +94,21 @@ Public Module logger
         Next
     End Sub
 
+    Public Sub purge()
+        If messages.Count > 0 Then
+            If purgeLock.WaitOne(10) Then
+                flush()
+                Dim m As Integer = messages.Count
+                messages.RemoveRange(0, Math.Max(m / 2, 1))
+                log(loglevels.debug, "logger.purge: Purged messages. [Messages stored:" & m & " --> " & messages.Count & "]")
+                purgeLock.Release()
+            End If
+        End If
+    End Sub
+
     Public Sub log(ByVal loglevel As Byte, ByVal logMessage As String)
+        ' purge old messages if needed
+        If messages.Count >= maxMessageCount Then purge()
         Dim message As New message(loglevel, logMessage)
         messages.Add(message)
         logAction(message)
