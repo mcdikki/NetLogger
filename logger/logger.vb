@@ -26,6 +26,7 @@ Public Module logger
     Private logActions As List(Of ILogAction) = New List(Of ILogAction)
     Public stdLogAction As New consoleLogger(loglevels.log)
 
+    Public Event messageReceived(ByRef message As message)
 
     Public Enum loglevels
         critical = 0
@@ -111,6 +112,7 @@ Public Module logger
         If messages.Count >= maxMessageCount Then purge()
         Dim message As New message(loglevel, logMessage)
         messages.Add(message)
+        RaiseEvent messageReceived(message)
         logAction(message)
     End Sub
 
