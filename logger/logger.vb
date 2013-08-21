@@ -26,7 +26,7 @@ Public Module logger
     Private logActions As List(Of ILogAction) = New List(Of ILogAction)
     Public stdLogAction As New consoleLogger(loglevels.log)
 
-    Public Event messageReceived(ByRef message As message)
+    Public Event messageReceived(ByVal message As message)
 
     Public Enum loglevels
         critical = 0
