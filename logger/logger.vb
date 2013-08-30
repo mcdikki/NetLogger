@@ -329,8 +329,11 @@ Public Class fileLogger
         buffer = ""
 
         'If appendExisting Then
-        My.Computer.FileSystem.WriteAllText(file, "", appendExisting)
-        'End If
+        Try
+            My.Computer.FileSystem.WriteAllText(file, "", appendExisting)
+            'End If
+        Catch e As Exception
+        End Try
     End Sub
 
     Public Sub setLoglevel(ByVal loglevel As Byte) Implements ILogAction.setLoglevel
