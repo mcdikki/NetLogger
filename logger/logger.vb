@@ -73,6 +73,7 @@ Public Module logger
         If Not logActions.Contains(logAction) Then
             logActions.Add(logAction)
             logAction.open()
+            AddHandler messageReceived, AddressOf logAction.receiveMessage
         End If
     End Sub
 
@@ -80,6 +81,7 @@ Public Module logger
         If logActions.Contains(logAction) Then
             logAction.close()
             logActions.Remove(logAction)
+            RemoveHandler messageReceived, AddressOf logAction.receiveMessage
         End If
     End Sub
 
@@ -98,11 +100,18 @@ Public Module logger
     Public Sub purge()
         If messages.Count > 0 Then
             If purgeLock.WaitOne(10) Then
-                flush()
-                Dim m As Integer = messages.Count
-                messages.RemoveRange(0, Math.Max(m / 2, 1))
-                log(loglevels.debug, "logger.purge: Purged messages. [Messages stored:" & m & " --> " & messages.Count & "]")
-                purgeLock.Release()
+                Try
+                    flush()
+                    Dim m As Integer = messages.Count
+                    messages.RemoveRange(0, Math.Max(m / 2, 1))
+                    ' Adding this logging gives the potential of a deadlock, so we will not use it and silently ignore errors...
+                    'log(loglevels.debug, "logger.purge: Purged messages. [Messages stored:" & m & " --> " & messages.Count & "]")
+                Catch e As Exception
+                    ' Adding this logging gives the potential of a deadlock, so we will not use it and silently ignore errors...
+                    'err("logger.purge: Error purging messages." & vbNewLine & e.Message)
+                Finally
+                    purgeLock.Release()
+                End Try
             End If
         End If
     End Sub
@@ -111,9 +120,18 @@ Public Module logger
         ' purge old messages if needed
         If messages.Count >= maxMessageCount Then purge()
         Dim message As New message(loglevel, logMessage)
-        messages.Add(message)
-        RaiseEvent messageReceived(message)
-        logAction(message)
+        If purgeLock.WaitOne() Then
+            Try
+                messages.Add(message)
+                RaiseEvent messageReceived(message)
+                'logAction(message)
+            Catch e As Exception
+                ' Adding this logging gives the potential of a deadlock, so we will not use it and silently ignore errors...
+                'err("logger.log: Error logging message '" & logMessage & "'." & vbNewLine & e.Message)
+            Finally
+                purgeLock.Release()
+            End Try
+        End If
     End Sub
 
     Public Sub debug(ByVal logMessage As String)
@@ -137,16 +155,18 @@ Public Module logger
     End Sub
 
     Private Function getLastMessages(ByVal loglevel As Byte, ByVal numberOfMessages As Integer) As List(Of message)
+        Dim messagesCopy As List(Of message) = New List(Of message)(messages)
         Dim out As List(Of message) = New List(Of message)
-        If numberOfMessages < 0 Then numberOfMessages = messages.Count
-        For mes As Integer = messages.Count - 1 To 0 Step -1
-            Dim message As message = messages.Item(mes)
-            If numberOfMessages = 0 Then Exit For
+
+        Dim message As message
+        While out.Count < numberOfMessages AndAlso messagesCopy.Count > 0
+            message = messagesCopy.Last
+            messagesCopy.Remove(message)
+
             If message.getLevel <= loglevel Then
-                numberOfMessages = numberOfMessages - 1
                 out.Add(message)
             End If
-        Next
+        End While
         Return out
     End Function
 
@@ -255,11 +275,11 @@ Public Module logger
         Return getLastLog(loglevels.critical, numberOfMessages)
     End Function
 
-    Private Sub logAction(ByVal message As message)
-        For Each la As ILogAction In logActions
-            la.receiveMessage(message)
-        Next
-    End Sub
+    'Private Sub logAction(ByVal message As message)
+    '    For Each la As ILogAction In logActions
+    '        la.receiveMessage(message)
+    '    Next
+    'End Sub
 End Module
 
 Public Class consoleLogger
