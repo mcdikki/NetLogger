@@ -108,11 +108,8 @@ The code is easy to understand, just have a look.
 Development
 -----------
 
-NetLogger is under constant development. It started as a fast coded tool I used in one project.
-But as you allways need logging, especialy in the development phase, I started to use it on all my projects
-and finally decided to publish it. Your welcome to contribute, fork and use it as you want.
-I'm sure there are a lot of better, more powerfull and faster loggers out there, but it was of use for me, so maybe it
-will be of use for others too.
+I've stopped developing, maintaining and using this tool.
+There is no plan for any further development.
 
 
 
